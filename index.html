@@ -20,7 +20,7 @@
         var data = MP.api.query('/api/2.0/engage/revenue/', {
             from: moment().subtract(5, 'months'), // Edit this value to select date range
             to: moment(), // Edit this value to select date range
-            action: 'properties["Campaign Source"]',
+            action: 'properties["$region"]',
             unit: 'month'
         }, {dataType:'json'})
         .done(function(json) {
