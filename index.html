@@ -1,7 +1,6 @@
 <!doctype html>
 <html>
   <head>
-    <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="https://cdn.mxpnl.com/libs/mixpanel-platform/css/reset.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.css">
     <script src="https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.js"></script>
@@ -17,34 +16,49 @@
     </div>
     <div id="table"></div>
     <script>
-      var eventSelect = $('#eventSelect').MPEventSelect();
-      var propSelect  = $('#propSelect').MPPropertySelect();
-      var dateSelect  = $('#dateSelect').MPDatepicker();
-      var eventGraph  = $('#graph').MPChart({chartType: 'line'});
-      var eventTable  = $('#table').MPTable({
-        showPercentages: true,
-        firstColHeader: 'Event'
-      });
+      MP.api.ready(function() {
+        var data = MP.api.query('/api/2.0/engage/revenue/', {
+            from: moment().subtract(5, 'months'), // Edit this value to select date range
+            to: moment(), // Edit this value to select date range
+            action: 'properties["Campaign Source"]',
+            unit: 'month'
+        }, {dataType:'json'})
+        .done(function(json) {
+          console.log(json);
+        })
+        .fail(function($xhr) {
+          console.log('error with request', $xhr);
+        });
+        
+        $.when(data).done(function(dataExtracted) {
+          console.log(dataExtracted["results"])
+          var campaigns = dataExtracted["results"]
+          var graphData = {}
+          
+          for (i = 0; i < 6; i++) {
+            var campaign = _.keys(campaigns)[i]  
+            graphData[campaign] = {}
+            delete campaigns[campaign]['$overall']
+            
+            _.each(_.keys(campaigns[campaign]), function(hour){
+              var timeData = campaigns[campaign][hour]["amount"];
+              graphData[campaign][hour] = timeData;
+            });
+          }
+          
+          console.log(graphData)
+            
 
-      var runQuery = function() {
-        var eventName = eventSelect.MPEventSelect('value'),
-            propName  = propSelect.MPPropertySelect('value'),
-            dateRange = dateSelect.MPDatepicker('value');
-
-        if (eventName) {
-          MP.api.segment(eventName, propName, dateRange).done(function(results) {
-            eventGraph.MPChart('setData', results);
-            eventTable.MPTable('setData', results);
+          $('<div>').appendTo('body').MPChart({
+                chartType: 'line',
+                data: graphData
           });
-        }
-      };
-      eventSelect.on('change', function(e, eventName) {
-        propSelect.MPPropertySelect('setEvent', eventName);
-        $("#by").show();
-        runQuery();
+          
+        });
+        
       });
-      propSelect.on('change', runQuery);
-      dateSelect.on('change', runQuery);
+      
+
     </script>
   </body>
 </html>
