@@ -50,7 +50,17 @@
             
 
           $('<div>').appendTo('body').MPChart({
+                chartType: 'line',
+                data: graphData
+          });
+          
+          $('<div>').appendTo('body').MPChart({
                 chartType: 'bar',
+                data: graphData
+          });
+          
+          $('<div>').appendTo('body').MPChart({
+                chartType: 'pie',
                 data: graphData
           });
           
