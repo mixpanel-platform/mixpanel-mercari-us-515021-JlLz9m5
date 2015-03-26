@@ -49,17 +49,17 @@
           console.log(graphData)
             
 
-          $('<div>').appendTo('body').MPChart({
+          $('<div>').css({'width':'100%', 'float':'left'}).appendTo('body').MPChart({
                 chartType: 'line',
                 data: graphData
           });
           
-          $('<div>').appendTo('body').MPChart({
+          $('<div>').css({'width':'460px', 'float':'left'}).appendTo('body').MPChart({
                 chartType: 'bar',
                 data: graphData
           });
           
-          $('<div>').appendTo('body').MPChart({
+          $('<div>').css({'width':'460px', 'float':'right'}).appendTo('body').MPChart({
                 chartType: 'pie',
                 data: graphData
           });
