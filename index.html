@@ -18,7 +18,7 @@
     <script>
       MP.api.ready(function() {
         var data = MP.api.query('/api/2.0/engage/revenue/', {
-            from: moment().subtract(5, 'months'), // Edit this value to select date range
+            from: moment().subtract(4, 'months'), // Edit this value to select date range
             to: moment(), // Edit this value to select date range
             action: 'properties["$region"]',
             unit: 'month'
