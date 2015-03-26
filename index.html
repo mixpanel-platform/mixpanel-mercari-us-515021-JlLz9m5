@@ -21,7 +21,7 @@
             from: moment().subtract(4, 'months'), // Edit this value to select date range
             to: moment(), // Edit this value to select date range
             action: 'properties["$region"]',
-            unit: 'month'
+            unit: 'day'
         }, {dataType:'json'})
         .done(function(json) {
           console.log(json);
